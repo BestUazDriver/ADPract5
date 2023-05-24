@@ -1,8 +1,18 @@
 package org.example;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Patient {
     private enum CVRM{
         PRIMARY, SECONDARY
@@ -14,27 +24,29 @@ public class Patient {
         MALE, FEMALE
     }
     private int id;
-    private LocalDateTime date;
+    private LocalDate date;
     private String name;
     private String organisation;
     private boolean organisationTreatment;
-    private LocalDateTime treatmentStartDate;
+    private LocalDate treatmentStartDate;
     private int riskScoreCVRM;
     private int mdrd;
-    private LocalDateTime lastMDRDLastDate;
+    private LocalDate lastMDRDLastDate;
     private double glucoseFasting;
-    private LocalDateTime glucoseFastingLastDate;
+    private LocalDate glucoseFastingLastDate;
     private int cholesterol;
-    private LocalDateTime cholesterolLastDate;
+    private LocalDate cholesterolLastDate;
     private int systolicBloodPressure;
     private int diastolicBloodPressure;
-    private LocalDateTime systolicBloodPressureLastDate;
+    private LocalDate systolicBloodPressureLastDate;
     private int bmi;
-    private LocalDateTime bmiLastDate;
+    private LocalDate bmiLastDate;
     private CVRM cvrm;
     private SmokingStatus smokingStatus;
-    private LocalDateTime dateLastContactCVRM;
+    private LocalDate dateLastContactCVRM;
     private PatientGender patientGender;
     private int age;
     private boolean hypertension;
+    private LocalDate annualCheckupCVRMDate;
+    private LocalDate interimCheckupCVRMDate;
 }
