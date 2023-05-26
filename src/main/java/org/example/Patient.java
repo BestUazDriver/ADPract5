@@ -34,7 +34,7 @@ public class Patient {
     private LocalDate lastMDRDLastDate;
     private double glucoseFasting;
     private LocalDate glucoseFastingLastDate;
-    private int cholesterol;
+    private double cholesterol;
     private LocalDate cholesterolLastDate;
     private int systolicBloodPressure;
     private int diastolicBloodPressure;
