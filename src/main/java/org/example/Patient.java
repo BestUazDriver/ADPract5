@@ -14,15 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Patient {
-    private enum CVRM{
-        PRIMARY, SECONDARY
-    }
-    private enum SmokingStatus{
-        YES, NEVER
-    }
-    private enum PatientGender{
-        MALE, FEMALE
-    }
     private int id;
     private LocalDate date;
     private String name;
@@ -34,17 +25,17 @@ public class Patient {
     private LocalDate lastMDRDLastDate;
     private double glucoseFasting;
     private LocalDate glucoseFastingLastDate;
-    private int cholesterol;
+    private double cholesterol;
     private LocalDate cholesterolLastDate;
     private int systolicBloodPressure;
     private int diastolicBloodPressure;
     private LocalDate systolicBloodPressureLastDate;
     private int bmi;
     private LocalDate bmiLastDate;
-    private CVRM cvrm;
-    private SmokingStatus smokingStatus;
+    private String cvrm;
+    private String smokingStatus;
     private LocalDate dateLastContactCVRM;
-    private PatientGender patientGender;
+    private String patientGender;
     private int age;
     private boolean hypertension;
     private LocalDate annualCheckupCVRMDate;
