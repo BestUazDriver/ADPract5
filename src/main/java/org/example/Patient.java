@@ -18,7 +18,7 @@ public class Patient {
     private LocalDate date;
     private String name;
     private String organisation;
-    private boolean organisationTreatment;
+    private int organisationTreatment;
     private LocalDate treatmentStartDate;
     private int riskScoreCVRM;
     private int mdrd;
