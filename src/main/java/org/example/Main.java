@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Main {
 
-    private final static String path = "C:\\Users\\admin\\IdeaProjects\\src\\ADPract5\\src\\main\\resources\\med.txt";
+    private static String path = "C:\\Javafiles\\DataAnalisysPeact\\src\\main\\resources\\med.txt";
 
     public static void main(String[] args) {
         List<Patient> patients = readFile(path);
@@ -43,14 +43,12 @@ public class Main {
                     } else {
                         riskScore = Integer.parseInt(params[6]);
                     }
-                    if (riskScore > 50) isValidPatient = false;
                     int mdrd;
                     if (params[7].equals("")) {
                         mdrd = 0;
                     } else {
                         mdrd = Integer.parseInt(params[7]);
                     }
-                    if (mdrd < 15 || mdrd > 140) isValidPatient = false;
                     LocalDate mdrdLstDate = null;
                     if (!params[8].equals("")) {
                         String[] mdrdLastParse = params[8].split("/");
@@ -62,7 +60,6 @@ public class Main {
                     } else {
                         glucoseFasting = 0.0;
                     }
-                    if (glucoseFasting < 3 || glucoseFasting > 25) isValidPatient = false;
                     LocalDate glucoseFastingLastDate = null;
                     if (!params[10].equals("")) {
                         String[] glucoseFastingLastDateParse = params[10].split("/");
@@ -74,7 +71,6 @@ public class Main {
                     } else {
                         cholesterol = Double.parseDouble(params[11]);
                     }
-                    if (cholesterol < 2 || cholesterol > 15) isValidPatient = false;
                     LocalDate cholesterolLastDate = null;
                     if (!params[12].equals("")) {
                         String[] cholesterolLastDateParse = params[12].split("/");
@@ -84,12 +80,10 @@ public class Main {
                     if (!params[13].equals("")) {
                         systolicBloodPressure = Integer.parseInt(params[13]);
                     }
-                    if (systolicBloodPressure < 90 || systolicBloodPressure > 230) isValidPatient = false;
                     int diastolicBloodPressure = 0;
                     if (!params[14].equals("")) {
                         diastolicBloodPressure = Integer.parseInt(params[14]);
                     }
-                    if (diastolicBloodPressure < 40 || diastolicBloodPressure > 120) isValidPatient = false;
 
                     String[] systolicBloodPressureLastDateParse = params[15].split("/");
                     LocalDate systolicBloodPressureLastDate = null;
@@ -100,7 +94,6 @@ public class Main {
                     if (!params[16].equals("")) {
                         bmi = Integer.parseInt(params[16]);
                     }
-                    if (bmi < 15 || bmi > 45) isValidPatient = false;
                     LocalDate bmiLastDate = null;
                     if (!params[17].equals("")) {
                         String[] bmiLastDateParse = params[17].split("/");
@@ -154,7 +147,17 @@ public class Main {
                             .annualCheckupCVRMDate(annualCheckupCVRMDate)
                             .interimCheckupCVRMDate(interimCheckupCVRMDate)
                             .build();
-                    if (isValidPatient) patients.add(patient);
+
+                    if (bmi < 15 || bmi > 45) isValidPatient = false;
+                    if (diastolicBloodPressure < 40 || diastolicBloodPressure > 120) isValidPatient = false;
+                    if (systolicBloodPressure < 90 || systolicBloodPressure > 230) isValidPatient = false;
+                    if (cholesterol < 2 || cholesterol > 15) isValidPatient = false;
+                    if (mdrd < 15 || mdrd > 140) isValidPatient = false;
+                    if (glucoseFasting < 3 || glucoseFasting > 25) isValidPatient = false;
+                    if (riskScore > 50) isValidPatient = false;
+
+//                    if (isValidPatient)
+                        patients.add(patient);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     break;
                 }
@@ -177,10 +180,6 @@ public class Main {
                 villagers.add(patient);
             }
         }
-        for (Patient patient : villagers) {
-            System.out.print(patient.getDiastolicBloodPressure() + "  ");
-        }
-        System.out.println(" ");
 
         double citizenAverageDiastolicBloodPressure = 0;
         for (Patient patient : citizens) {
@@ -216,6 +215,43 @@ public class Main {
         totalValues.put("Villagers diastolic blood pressure dispersion", villagerDiastolicBloodPressureDispersion);
         totalValues.put("Villagers diastolic blood pressure quadratic deviation", villagerDiastolicBloodPressureQuadraticDeviation);
 
+        System.out.println("Villagers grouped invalid values proportions: " + parseByAge(villagers));
+        System.out.println("Citizens grouped invalid values proportions: " + parseByAge(citizens));
+
         return totalValues;
+    }
+
+    private static Map<String, Double> parseByAge(List<Patient> patients) {
+        Map<String, Double> totalResults = new HashMap<>();
+        List<Patient> young = new ArrayList<>();
+        List<Patient> middle = new ArrayList<>();
+        List<Patient> old = new ArrayList<>();
+        for (Patient patient : patients) {
+            if (patient.getAge() < 25) {
+                young.add(patient);
+            } else if (patient.getAge() < 40) {
+                middle.add(patient);
+            } else {
+                old.add(patient);
+            }
+        }
+        totalResults.put("Young group invalid proportion: ", getInvalidValuesGroupProportion(young));
+        totalResults.put("Middle group invalid proportion: ", getInvalidValuesGroupProportion(middle));
+        totalResults.put("Old group invalid proportion: ", getInvalidValuesGroupProportion(old));
+        return totalResults;
+    }
+
+    private static double getInvalidValuesGroupProportion(List<Patient> patients) {
+        double invalidValues = 0;
+        for (Patient patient : patients) {
+            if (patient.getBmi() < 15 || patient.getBmi() > 45) invalidValues++;
+            if (patient.getDiastolicBloodPressure() < 40 || patient.getDiastolicBloodPressure() > 120) invalidValues++;
+            if (patient.getSystolicBloodPressure() < 90 || patient.getSystolicBloodPressure() > 230) invalidValues++;
+            if (patient.getCholesterol() < 2 || patient.getCholesterol() > 15) invalidValues++;
+            if (patient.getMdrd() < 15 || patient.getMdrd() > 140) invalidValues++;
+            if (patient.getGlucoseFasting() < 3 || patient.getGlucoseFasting() > 25) invalidValues++;
+            if (patient.getRiskScoreCVRM() > 50) invalidValues++;
+        }
+        return invalidValues / (patients.size() * 7);
     }
 }
